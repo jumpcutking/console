@@ -20,18 +20,21 @@
  * @license MIT
  * @author @jumpcutking
  * @example <caption>See the test.js file for an example of how to use this module.</caption>
- * var jckConsole = require("@jumpcutking/console");
- * jckConsole.startup();
- * 
- * var recievedEntries = [];
- * jckConsole.on('entry', function (type, nessage, args, stack) {
- *    recievedEntries.push({
- *      type: type,
- *     nessage: nessage,
- *     args: args,
- *     stack: stack
- *  });
+ * var jckConsole = require('./index.js');
+ * jckConsole.startup({
+ *     // generateStacktrace: true,
+ *     storeLogs: true,
+ *     // depth: 4
  * });
+ * 
+ * jckConsole.on('entry', function (type, nessage, args, stack) {
+ *     // your code here
+ * });
+ * 
+ * console.on("warn", function (message, args, stack) {
+ *     // your code here
+ * });
+ * 
  * console.info("Hello World!");
  */
 
@@ -124,11 +127,14 @@ var callbacks = {
  * @default false
  * @property {boolean} storeLogs should I store logs in memory
  * @default false
+ * @property {boolean} depth The depth to inspect objects. 0 is unlimited.
+ * @default 0
  */
 var options = {
     reportToConsole: true,
     generateStacktrace: false,
-    storeLogs: false
+    storeLogs: false,
+    depth: 0
 }
 
 /**
@@ -523,8 +529,14 @@ function sharePrettyLog(msg, logHandler) {
         } else {
             //insert a tab
             // var tab = "\t";
-            logHandler(`${firstObj} `
-            + colorOf.white(util.inspect(msg.objects, {showHidden: false, depth: null, colors: true})));
+
+            if (options.depth == 0) {
+                logHandler(`${firstObj} `
+                + colorOf.white(util.inspect(msg.objects, {showHidden: false, depth: null, colors: true})));
+            } else {
+                logHandler(`${firstObj} `
+                + colorOf.white(util.inspect(msg.objects, {showHidden: false, depth: options.depth, colors: true})));
+            }
         }
 
     } else {

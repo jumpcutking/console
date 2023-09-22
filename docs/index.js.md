@@ -22,18 +22,21 @@ MIT License.
 **License**: MIT  
 **Example** *(See the test.js file for an example of how to use this module.)*  
 ```js
-var jckConsole = require("@jumpcutking/console");
-jckConsole.startup();
-
-var recievedEntries = [];
-jckConsole.on('entry', function (type, nessage, args, stack) {
-   recievedEntries.push({
-     type: type,
-    nessage: nessage,
-    args: args,
-    stack: stack
- });
+var jckConsole = require('./index.js');
+jckConsole.startup({
+    // generateStacktrace: true,
+    storeLogs: true,
+    // depth: 4
 });
+
+jckConsole.on('entry', function (type, nessage, args, stack) {
+    // your code here
+});
+
+console.on("warn", function (message, args, stack) {
+    // your code here
+});
+
 console.info("Hello World!");
 ```
 
@@ -115,7 +118,7 @@ The callback functions for each type of console message.
 The console object for the child thread to use.
 
 **Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-**Default**: <code>false</code>  
+**Default**: <code>0</code>  
 **Properties**
 
 | Name | Type | Description |
@@ -123,6 +126,7 @@ The console object for the child thread to use.
 | reportToConsole | <code>boolean</code> | Automatically report to the terminal and console. |
 | generateStacktrace | <code>boolean</code> | Automatically generate a stacktrace object for each log message, will return them to the callback function only. |
 | storeLogs | <code>boolean</code> | should I store logs in memory |
+| depth | <code>boolean</code> | The depth to inspect objects. 0 is unlimited. |
 
 <a name="module_@jumpcutking/console..entries"></a>
 

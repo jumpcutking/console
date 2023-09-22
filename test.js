@@ -4,8 +4,9 @@
  */
 var jckConsole = require('./index.js');
 jckConsole.startup({
-    //generateStacktrace: true,
+    // generateStacktrace: true,
     storeLogs: true,
+    // depth: 1
 });
 
 /**
