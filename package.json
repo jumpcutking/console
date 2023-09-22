@@ -1,0 +1,39 @@
+{
+  "name": "@jumpcutking/console",
+  "version": "0.8.0",
+  "description": "A pretty console reporting system updated to support event listening and consistent reporting. Used in @jumpcutking/threads",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "docs": "node createDocs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jumpcutking/console.git"
+  },
+  "keywords": [
+    "console",
+    "pretty",
+    "console",
+    "developer",
+    "console",
+    "logging",
+    "simple",
+    "logging",
+    "simple",
+    "logs",
+    "logs",
+    "developer",
+    "logging",
+    "development"
+  ],
+  "author": "@jumpcutking",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jumpcutking/console/issues"
+  },
+  "homepage": "https://github.com/jumpcutking/console#readme",
+  "devDependencies": {
+    "jsdoc-to-markdown": "^8.0.0"
+  }
+}
