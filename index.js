@@ -39,40 +39,50 @@
  */
 
 /**
- * The console contrustor, for creating and working with the console.
- * @see {@link https://nodejs.org/api/console.html} for more information.
+ * Start's the console and sets up the event listener.
+ * @param {*} _options The options to set for the console. 
+ * @see {@link module:@jumpcutking/console~option} for a list of options
+ * @public
  */
-var Console = require("node:console").Console;
+function startup(_options = {}) {
+
+    // for each options in _options set it or report the option isn't valid
+    for (const option in _options) {
+        if (Object.hasOwnProperty.call(_options, option)) {
+            const value = _options[option];
+            if (option in options) {
+                options[option] = value;
+            } else {
+                console.warn(`The option '${option}' is not a valid option for the @jumpcutking/console.`);
+            }
+        }
+    }
+
+    // console.log("Console is ready.")
+    console = zconsole();
+}; module.exports.startup = startup;
+module.exports.init = startup;
 
 /**
- * The colors module, used to colorize and beautify the console output.
- * @see {@link https://www.npmjs.com/package/colors} for more information.
+ * Adds a callback to the specified callback type.
+ * @param {string} type The string of the supported callback type.
+ * @param {function} callback The callback function to add.
+ * @see {@link module:@jumpcutking/console~callbacks} for a list of supported callback types.
+ * @see {@link module:@jumpcutking/console~MostCallbackExample} for an example for what most of the callbacks will need to look like.
+ * @see {@link module:@jumpcutking/console~EntryCallbackExample} for an example for what the entry callback will need to look like.
+ * @throws {Error} If the callback type is not supported.
+ * @public
  */
-var colorOf = require("colors");
+function on(type, callback) {
+    
+    if (type in callbacks) {
+        callbacks[type].push(callback);
+    } else {
+        throw new Error(`Unsupported callback type: ${type}`);
+    }
+    
+} module.exports.on = on;
 
-/**
- * The util module, used to inspect objects.
- * @see {@link https://nodejs.org/api/util.html} for more information.
- */
-var util = require("util");
-
-/**
- * A fresh instance of the console object.
- * This keeps a refrence to the console without
- * any loopbacks during global replacement.
- * @type {Object} The console object.
- * @see {@link https://nodejs.org/api/console.html} for more information.
- */
-var myConsole = Console({ stdout: process.stdout, stderr: process.stderr }); 
-// var myid = "Parent";
-
-// /**
-//  * Sets up the overiding log function.
-//  * @param {*} type 
-//  * @param {*} args 
-//  * @param {*} logger If you'd like the output to go to the console, use this function. Modify args as needed.
-//  */
-// var logDelegate = function (type, args, logger) {};
 
 /**
  * An example callback for all events except the entry event.
@@ -138,260 +148,18 @@ var options = {
 }
 
 /**
- * The log entries, if options.storeLogs is true.
- * @type {Array} The log entries.
- * @see {@link module:@jumpcutking/console~options} for more information.
- * @property {string} entries[].type The type of console message.
- * @property {string} entries[].message The message provided to the console object.
- * @property {*} entries[].args The additional arguments provided to the console object.
- * @property {object[]} entries[].stack The stacktrace object.
- * @property {Datetime} entries[].when The time the entry was created.
- * @see {@link module:@jumpcutking/console~parseStackTrace} for the stacktrace object format.
- */
-var entries = [];
-
-/**
- * Returns any stored entries.
- * Don't forget to activate the storeLogs option {@link module:@jumpcutking/console~options}.
- * @returns {Array} The log entries.
- * @see {@link module:@jumpcutking/console~entries} for more information.
- * @throws {Error} If logs are not being stored.
- */
-function getEntries() {
-
-    if (!options.storeLogs) {
-        throw new Error("Logs are not being stored.");
-    }
-
-    return entries;
-} module.exports.getEntries = getEntries;
-
-/**
- * Clears any stored entries.
- * Don't forget to activate the storeLogs option {@link module:@jumpcutking/console~options}.
- * @see {@link module:@jumpcutking/console~entries} for more information.
- */
-function clearEntries() {
-    entries = [];
-} module.exports.clearEntries = clearEntries;
-
-/**
- * @see {@link https://github.com/jumpcutking/threads} Moved from @jumpcutking/threads
- * This replaces the normal console object, globally, for easy reporting to the 
- * developer. This is used in Threads for consisitent reporting. 
- * 
- * Currently supported methods:
- * @property {function} log The log function.
- * @property {function} info The info function.
- * @property {function} warn The warn function.
- * @property {function} error The error function.
- * @property {function} debug The debug function.
- * @returns {Object} The new console object.
- */
-var zconsole = () => {
-    return {
-        log: function (...args) {
-            pLog("log", args, myConsole.log);
-        },
-        info: function (...args) {
-            pLog("info", args, myConsole.info);
-        },
-        warn: function (...args) {
-            pLog("warn", args, myConsole.warn);
-        },
-        error: function (...args) {
-            pLog("error", args, myConsole.error); 
-        },
-        debug: function (...args) {
-            pLog("debug", args, myConsole.debug);
-        },
-        /**
-         * @alias module:@jumpcutking/console~on
-         * @param {*} type 
-         * @param {*} callback 
-         */
-        on: function (type, callback) {
-            on(type, callback);
-        },
-        /**
-         * @alias module:@jumpcutking/console~getEntries
-         */
-        getEntries: function () {
-            return getEntries();
-        },
-        /**
-         * @alias module:@jumpcutking/console~clearEntries
-         */
-        clearEntries: function () {
-            return clearEntries();
-        },
-        /**
-         * @alias module:@jumpcutking/console~options
-         */
-        options: function () {
-            return options;
-        }
-    };
-};
-
-/**
- * Start's the console and sets up the event listener.
- * @param {*} _options The options to set for the console. 
- * @see {@link module:@jumpcutking/console~option} for a list of options
- */
-function startup(_options = {}) {
-
-    // for each options in _options set it or report the option isn't valid
-    for (const option in _options) {
-        if (Object.hasOwnProperty.call(_options, option)) {
-            const value = _options[option];
-            if (option in options) {
-                options[option] = value;
-            } else {
-                console.warn(`The option '${option}' is not a valid option for the @jumpcutking/console.`);
-            }
-        }
-    }
-
-    // console.log("Console is ready.")
-    console = zconsole();
-}; module.exports.startup = startup;
-module.exports.init = startup;
-
-/**
- * Adds a callback to the specified callback type.
- * @param {string} type The string of the supported callback type.
- * @param {function} callback The callback function to add.
- * @see {@link module:@jumpcutking/console~callbacks} for a list of supported callback types.
- * @see {@link module:@jumpcutking/console~MostCallbackExample} for an example for what most of the callbacks will need to look like.
- * @see {@link module:@jumpcutking/console~EntryCallbackExample} for an example for what the entry callback will need to look like.
- * @throws {Error} If the callback type is not supported.
- */
-function on(type, callback) {
-    
-    if (type in callbacks) {
-        callbacks[type].push(callback);
-    } else {
-        throw new Error(`Unsupported callback type: ${type}`);
-    }
-    
-} module.exports.on = on;
-
-/**
- * This function calls the specified callbacks in order of their addition.
- * @param {string} callbackType The string of the supported callback type.
- * @param {*} type The type of console message.
- * @param {*} args The arguments provided to the console object.
- * @param {*} stack The stacktrace object.
- * @see {@link module:@jumpcutking/console~parseStackTrace} for the stacktrace object format.
- * @see {@link module:@jumpcutking/console~callbacks} for a list of supported callback types.
- * @see {@link module:@jumpcutking/console~MostCallbackExample} for an example for what most of the callbacks will need to look like.
- * @see {@link module:@jumpcutking/console~EntryCallbackExample} for an example for what the entry callback will need to look like.
- */
-function call(callbackType, type, args, stack = null) {
-    
-    // myConsole.info("Calling Callbacks", callbackType, type, args, stack);
-
-    var message = args[0];
-    // if message is not a string don't use it
-    if (typeof message !== "string") {
-        message = "";
-    } else {
-        //remove the message from the args
-        args.shift();
-    }
-
-    if (callbackType in callbacks) {
-
-        if (callbackType == "entry") {
-            for (var callback of callbacks[callbackType]) {
-                callback(type, message, args, stack)
-            }
-        } else {
-            for (var callback of callbacks[callbackType]) {
-                callback(message, args, stack)
-            }
-        }
-
-    } else {
-        throw new Error(`Unsupported callback type: ${callbackType}`);
-    }
-} module.exports.call = call;
-
-/**
- * A log event has occured.
- * This event will call the callback functions. 
- * 
- * Clones objects for each callback, so they can't modify the original.
- * 
- * @see {@link module:@jumpcutking/console~MostCallbackExample} for a list of supported callback types.
- * @see {@link module:@jumpcutking/console~EntryCallbackExample} for an example for what the entry callback will need to look like.
- * @param {*} type The type of log event that occured.
- * @param {*} args The arguments provided to the console object.
- * @param {*} logger The function to call to log the message.
- */
-function pLog(type, args, logger) {
-    
-    var stack = null;
-
-    if (options.generateStacktrace) {
-        stack = GenerateStacktrace(2)
-    }
-
-    //store the entry
-    if (options.storeLogs) {
-        if (!stack) {
-            //why record a stacktrace if we don't have one?
-            entries.push({
-                type: type,
-                message: args[0],
-                args: args,
-                when: new Date()
-            });
-        } else {
-            entries.push({
-                type: type,
-                message: args[0],
-                args: args,
-                stack: stack,
-                when: new Date()
-            });
-        }
-    }
-
-    if (!stack) {
-        call("entry", type + "", [...args]);
-        call(type + "", type + "", [...args]);
-    } else {
-        call("entry", type + "", [...args], [...stack]);
-        call(type + "", type + "", [...args], [...stack]);
-    }
-
-    // myConsole.log("Example Stack Trace: ", stacktrace)
-    if (options.reportToConsole) {
-        sharePrettyLog({
-            message: type,
-            objects: args
-        }, logger);
-    }
-
-
-
-} module.exports.pLog = pLog;
-
-/**
- * Conforms a logs's stacktrace to a standard format.
+ * Creates a new stacktrace and conforms it to a stacktrace object {@link module:@jumpcutking/console~parseStackTrace} to a standard format.
  * @param {*} stacktrace The error.stack string.
  * @param {*} _levelToRemove The number of lines (or calls) to remove from the stacktrace. It will automatically remove the "Error" line, and it's own call. levlToRemove is appended to "2", removing the first 2 lines.
  * @returns {Object} The stacktrace object.
  * @see {@link module:@jumpcutking/console~parseStackTrace} for the stacktrace object format.
+ * @public
  */
 function GenerateStacktrace(_levelToRemove = 0) {
 
     return parseStackTrace((new Error()).stack, 2 + _levelToRemove);
 
 } module.exports.GenerateStacktrace = GenerateStacktrace;
-
 
 /**
  * Parses a stacktrace into a standard format.
@@ -405,6 +173,7 @@ function GenerateStacktrace(_levelToRemove = 0) {
  * @property {string} stack.file The file the message originated from.
  * @property {number} stack.line The line the message originated from.
  * @property {number} stack.column The column the message originated from.
+ * @public
  */
 function parseStackTrace(stackTrace, removeLvl = 0) {
     var lines = stackTrace.split('\n');
@@ -468,6 +237,207 @@ function parseStackTrace(stackTrace, removeLvl = 0) {
   
     return newStack;
 } module.exports.parseStackTrace = parseStackTrace;
+
+/**
+ * The log entries, if options.storeLogs is true.
+ * @type {Array} The log entries.
+ * @see {@link module:@jumpcutking/console~options} for more information.
+ * @property {string} entries[].type The type of console message.
+ * @property {string} entries[].message The message provided to the console object.
+ * @property {*} entries[].args The additional arguments provided to the console object.
+ * @property {object[]} entries[].stack The stacktrace object.
+ * @property {Datetime} entries[].when The time the entry was created.
+ * @see {@link module:@jumpcutking/console~parseStackTrace} for the stacktrace object format.
+ */
+var entries = [];
+
+/**
+ * Returns any stored entries.
+ * Don't forget to activate the storeLogs option {@link module:@jumpcutking/console~options}.
+ * @returns {Array} The log entries.
+ * @see {@link module:@jumpcutking/console~entries} for more information.
+ * @throws {Error} If logs are not being stored.
+ * @public
+ */
+function getEntries() {
+
+    if (!options.storeLogs) {
+        throw new Error("Logs are not being stored.");
+    }
+
+    return entries;
+} module.exports.getEntries = getEntries;
+
+/**
+ * Clears any stored entries.
+ * Don't forget to activate the storeLogs option {@link module:@jumpcutking/console~options}.
+ * @see {@link module:@jumpcutking/console~entries} for more information.
+ * @public
+ */
+function clearEntries() {
+    entries = [];
+} module.exports.clearEntries = clearEntries;
+
+
+/**
+ * @see {@link https://github.com/jumpcutking/threads} Moved from @jumpcutking/threads
+ * This replaces the normal console object, globally, for easy reporting to the 
+ * developer. This is used in Threads for consisitent reporting. 
+ * 
+ * Currently supported methods:
+ * @property {function} log The log function.
+ * @property {function} info The info function.
+ * @property {function} warn The warn function.
+ * @property {function} error The error function.
+ * @property {function} debug The debug function.
+ * @returns {Object} The new console object.
+ */
+var zconsole = () => {
+    return {
+        log: function (...args) {
+            pLog("log", args, myConsole.log);
+        },
+        info: function (...args) {
+            pLog("info", args, myConsole.info);
+        },
+        warn: function (...args) {
+            pLog("warn", args, myConsole.warn);
+        },
+        error: function (...args) {
+            pLog("error", args, myConsole.error); 
+        },
+        debug: function (...args) {
+            pLog("debug", args, myConsole.debug);
+        },
+        /**
+         * @alias module:@jumpcutking/console~on
+         * @param {*} type 
+         * @param {*} callback 
+         */
+        on: function (type, callback) {
+            on(type, callback);
+        },
+        /**
+         * @alias module:@jumpcutking/console~getEntries
+         */
+        getEntries: function () {
+            return getEntries();
+        },
+        /**
+         * @alias module:@jumpcutking/console~clearEntries
+         */
+        clearEntries: function () {
+            return clearEntries();
+        },
+        /**
+         * @alias module:@jumpcutking/console~options
+         */
+        options: function () {
+            return options;
+        }
+    };
+};
+
+/**
+ * This function calls the specified callbacks in order of their addition.
+ * @param {string} callbackType The string of the supported callback type.
+ * @param {*} type The type of console message.
+ * @param {*} args The arguments provided to the console object.
+ * @param {*} stack The stacktrace object.
+ * @see {@link module:@jumpcutking/console~parseStackTrace} for the stacktrace object format.
+ * @see {@link module:@jumpcutking/console~callbacks} for a list of supported callback types.
+ * @see {@link module:@jumpcutking/console~MostCallbackExample} for an example for what most of the callbacks will need to look like.
+ */
+function call(callbackType, type, args, stack = null) {
+    
+    // myConsole.info("Calling Callbacks", callbackType, type, args, stack);
+
+    var message = args[0];
+    // if message is not a string don't use it
+    if (typeof message !== "string") {
+        message = "";
+    } else {
+        //remove the message from the args
+        args.shift();
+    }
+
+    if (callbackType in callbacks) {
+
+        if (callbackType == "entry") {
+            for (var callback of callbacks[callbackType]) {
+                callback(type, message, args, stack)
+            }
+        } else {
+            for (var callback of callbacks[callbackType]) {
+                callback(message, args, stack)
+            }
+        }
+
+    } else {
+        throw new Error(`Unsupported callback type: ${callbackType}`);
+    }
+} //module.exports.call = call;
+
+/**
+ * A log event has occured.
+ * This event will call the callback functions. 
+ * 
+ * Clones objects for each callback, so they can't modify the original.
+ * 
+ * @see {@link module:@jumpcutking/console~MostCallbackExample} for a list of supported callback types.
+ * @see {@link module:@jumpcutking/console~EntryCallbackExample} for an example for what the entry callback will need to look like.
+ * @param {*} type The type of log event that occured.
+ * @param {*} args The arguments provided to the console object.
+ * @param {*} logger The function to call to log the message.
+ */
+function pLog(type, args, logger) {
+    
+    var stack = null;
+
+    if (options.generateStacktrace) {
+        stack = GenerateStacktrace(2)
+    }
+
+    //store the entry
+    if (options.storeLogs) {
+        if (!stack) {
+            //why record a stacktrace if we don't have one?
+            entries.push({
+                type: type,
+                message: args[0],
+                args: args,
+                when: new Date()
+            });
+        } else {
+            entries.push({
+                type: type,
+                message: args[0],
+                args: args,
+                stack: stack,
+                when: new Date()
+            });
+        }
+    }
+
+    if (!stack) {
+        call("entry", type + "", [...args]);
+        call(type + "", type + "", [...args]);
+    } else {
+        call("entry", type + "", [...args], [...stack]);
+        call(type + "", type + "", [...args], [...stack]);
+    }
+
+    // myConsole.log("Example Stack Trace: ", stacktrace)
+    if (options.reportToConsole) {
+        sharePrettyLog({
+            message: type,
+            objects: args
+        }, logger);
+    }
+
+
+
+} //module.exports.pLog = pLog;
 
 /**
  * Shares a Pretty Log message in the terminal
@@ -545,3 +515,30 @@ function sharePrettyLog(msg, logHandler) {
     }
 
 } //module.exports.sharePrettyLog = sharePrettyLog;
+
+/**
+ * The console contrustor, for creating and working with the console.
+ * @see {@link https://nodejs.org/api/console.html} for more information.
+ */
+var Console = require("node:console").Console;
+
+/**
+ * The colors module, used to colorize and beautify the console output.
+ * @see {@link https://www.npmjs.com/package/colors} for more information.
+ */
+var colorOf = require("colors");
+
+/**
+ * The util module, used to inspect objects.
+ * @see {@link https://nodejs.org/api/util.html} for more information.
+ */
+var util = require("util");
+
+/**
+ * A fresh instance of the console object.
+ * This keeps a refrence to the console without
+ * any loopbacks during global replacement.
+ * @type {Object} The console object.
+ * @see {@link https://nodejs.org/api/console.html} for more information.
+ */
+var myConsole = Console({ stdout: process.stdout, stderr: process.stderr }); 

@@ -41,13 +41,17 @@ console.info("Hello World!");
 ```
 
 * [@jumpcutking/console](#module_@jumpcutking/console)
+    * [~callbacks](#module_@jumpcutking/console..callbacks) : <code>Object</code>
+    * [~options](#module_@jumpcutking/console..options) : <code>Object</code>
+    * [~entries](#module_@jumpcutking/console..entries) : <code>Array</code>
     * [~Console](#module_@jumpcutking/console..Console)
     * [~colorOf](#module_@jumpcutking/console..colorOf)
     * [~util](#module_@jumpcutking/console..util)
     * [~myConsole](#module_@jumpcutking/console..myConsole) : <code>Object</code>
-    * [~callbacks](#module_@jumpcutking/console..callbacks) : <code>Object</code>
-    * [~options](#module_@jumpcutking/console..options) : <code>Object</code>
-    * [~entries](#module_@jumpcutking/console..entries) : <code>Array</code>
+    * [~startup(_options)](#module_@jumpcutking/console..startup)
+    * [~on(type, callback)](#module_@jumpcutking/console..on)
+    * [~GenerateStacktrace(stacktrace, _levelToRemove)](#module_@jumpcutking/console..GenerateStacktrace) ⇒ <code>Object</code>
+    * [~parseStackTrace(stackTrace, removeLvl)](#module_@jumpcutking/console..parseStackTrace) ⇒ <code>Array</code>
     * [~getEntries()](#module_@jumpcutking/console..getEntries) ⇒ <code>Array</code>
     * [~clearEntries()](#module_@jumpcutking/console..clearEntries)
     * [~zconsole()](#module_@jumpcutking/console..zconsole) ⇒ <code>Object</code>
@@ -55,46 +59,12 @@ console.info("Hello World!");
     * [~getEntries()](#module_@jumpcutking/console..getEntries)
     * [~clearEntries()](#module_@jumpcutking/console..clearEntries)
     * [~options()](#module_@jumpcutking/console..options)
-    * [~startup(_options)](#module_@jumpcutking/console..startup)
-    * [~on(type, callback)](#module_@jumpcutking/console..on)
     * [~call(callbackType, type, args, stack)](#module_@jumpcutking/console..call)
     * [~pLog(type, args, logger)](#module_@jumpcutking/console..pLog)
-    * [~GenerateStacktrace(stacktrace, _levelToRemove)](#module_@jumpcutking/console..GenerateStacktrace) ⇒ <code>Object</code>
-    * [~parseStackTrace(stackTrace, removeLvl)](#module_@jumpcutking/console..parseStackTrace) ⇒ <code>Array</code>
     * [~sharePrettyLog(msg, logHandler)](#module_@jumpcutking/console..sharePrettyLog)
     * [~MostCallbackExample](#module_@jumpcutking/console..MostCallbackExample) : <code>function</code>
     * [~EntryCallbackExample](#module_@jumpcutking/console..EntryCallbackExample) : <code>function</code>
 
-<a name="module_@jumpcutking/console..Console"></a>
-
-### @jumpcutking/console~Console
-The console contrustor, for creating and working with the console.
-
-**Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-**See**: [https://nodejs.org/api/console.html](https://nodejs.org/api/console.html) for more information.  
-<a name="module_@jumpcutking/console..colorOf"></a>
-
-### @jumpcutking/console~colorOf
-The colors module, used to colorize and beautify the console output.
-
-**Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-**See**: [https://www.npmjs.com/package/colors](https://www.npmjs.com/package/colors) for more information.  
-<a name="module_@jumpcutking/console..util"></a>
-
-### @jumpcutking/console~util
-The util module, used to inspect objects.
-
-**Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-**See**: [https://nodejs.org/api/util.html](https://nodejs.org/api/util.html) for more information.  
-<a name="module_@jumpcutking/console..myConsole"></a>
-
-### @jumpcutking/console~myConsole : <code>Object</code>
-A fresh instance of the console object.
-This keeps a refrence to the console without
-any loopbacks during global replacement.
-
-**Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-**See**: [https://nodejs.org/api/console.html](https://nodejs.org/api/console.html) for more information.  
 <a name="module_@jumpcutking/console..callbacks"></a>
 
 ### @jumpcutking/console~callbacks : <code>Object</code>
@@ -149,6 +119,113 @@ The log entries, if options.storeLogs is true.
 | entries[].stack | <code>Array.&lt;object&gt;</code> | The stacktrace object. |
 | entries[].when | <code>Datetime</code> | The time the entry was created. |
 
+<a name="module_@jumpcutking/console..Console"></a>
+
+### @jumpcutking/console~Console
+The console contrustor, for creating and working with the console.
+
+**Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+**See**: [https://nodejs.org/api/console.html](https://nodejs.org/api/console.html) for more information.  
+<a name="module_@jumpcutking/console..colorOf"></a>
+
+### @jumpcutking/console~colorOf
+The colors module, used to colorize and beautify the console output.
+
+**Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+**See**: [https://www.npmjs.com/package/colors](https://www.npmjs.com/package/colors) for more information.  
+<a name="module_@jumpcutking/console..util"></a>
+
+### @jumpcutking/console~util
+The util module, used to inspect objects.
+
+**Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+**See**: [https://nodejs.org/api/util.html](https://nodejs.org/api/util.html) for more information.  
+<a name="module_@jumpcutking/console..myConsole"></a>
+
+### @jumpcutking/console~myConsole : <code>Object</code>
+A fresh instance of the console object.
+This keeps a refrence to the console without
+any loopbacks during global replacement.
+
+**Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+**See**: [https://nodejs.org/api/console.html](https://nodejs.org/api/console.html) for more information.  
+<a name="module_@jumpcutking/console..startup"></a>
+
+### @jumpcutking/console~startup(_options)
+Start's the console and sets up the event listener.
+
+**Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+**Access**: public  
+**See**: [module:@jumpcutking/console~option](module:@jumpcutking/console~option) for a list of options  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| _options | <code>\*</code> | The options to set for the console. |
+
+<a name="module_@jumpcutking/console..on"></a>
+
+### @jumpcutking/console~on(type, callback)
+Adds a callback to the specified callback type.
+
+**Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+**Throws**:
+
+- <code>Error</code> If the callback type is not supported.
+
+**Access**: public  
+**See**
+
+- [callbacks](#module_@jumpcutking/console..callbacks) for a list of supported callback types.
+- [MostCallbackExample](#module_@jumpcutking/console..MostCallbackExample) for an example for what most of the callbacks will need to look like.
+- [EntryCallbackExample](#module_@jumpcutking/console..EntryCallbackExample) for an example for what the entry callback will need to look like.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| type | <code>string</code> | The string of the supported callback type. |
+| callback | <code>function</code> | The callback function to add. |
+
+<a name="module_@jumpcutking/console..GenerateStacktrace"></a>
+
+### @jumpcutking/console~GenerateStacktrace(stacktrace, _levelToRemove) ⇒ <code>Object</code>
+Creates a new stacktrace and conforms it to a stacktrace object [parseStackTrace](#module_@jumpcutking/console..parseStackTrace) to a standard format.
+
+**Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+**Returns**: <code>Object</code> - The stacktrace object.  
+**Access**: public  
+**See**: [parseStackTrace](#module_@jumpcutking/console..parseStackTrace) for the stacktrace object format.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| stacktrace | <code>\*</code> | The error.stack string. |
+| _levelToRemove | <code>\*</code> | The number of lines (or calls) to remove from the stacktrace. It will automatically remove the "Error" line, and it's own call. levlToRemove is appended to "2", removing the first 2 lines. |
+
+<a name="module_@jumpcutking/console..parseStackTrace"></a>
+
+### @jumpcutking/console~parseStackTrace(stackTrace, removeLvl) ⇒ <code>Array</code>
+Parses a stacktrace into a standard format.
+Any unknown format will be added to the stacktrace as a string. 
+This is helpful for Error: top line messages.
+
+**Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+**Returns**: <code>Array</code> - An array of stack objects.  
+**Access**: public  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| stackTrace | <code>\*</code> |  | The error.stack string. |
+| removeLvl | <code>\*</code> | <code>0</code> | The number of lines (or calls) to remove from the stacktrace. |
+
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| stack | <code>Object</code> | The stacktrace object. |
+| stack.call | <code>string</code> | The function or object called. |
+| stack.file | <code>string</code> | The file the message originated from. |
+| stack.line | <code>number</code> | The line the message originated from. |
+| stack.column | <code>number</code> | The column the message originated from. |
+
 <a name="module_@jumpcutking/console..getEntries"></a>
 
 ### @jumpcutking/console~getEntries() ⇒ <code>Array</code>
@@ -161,6 +238,7 @@ Don't forget to activate the storeLogs option [options](#module_@jumpcutking/con
 
 - <code>Error</code> If logs are not being stored.
 
+**Access**: public  
 **See**: [entries](#module_@jumpcutking/console..entries) for more information.  
 <a name="module_@jumpcutking/console..clearEntries"></a>
 
@@ -169,6 +247,7 @@ Clears any stored entries.
 Don't forget to activate the storeLogs option [options](#module_@jumpcutking/console..options).
 
 **Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+**Access**: public  
 **See**: [entries](#module_@jumpcutking/console..entries) for more information.  
 <a name="module_@jumpcutking/console..zconsole"></a>
 
@@ -212,40 +291,6 @@ Currently supported methods:
 
 ### @jumpcutking/console~options()
 **Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-<a name="module_@jumpcutking/console..startup"></a>
-
-### @jumpcutking/console~startup(_options)
-Start's the console and sets up the event listener.
-
-**Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-**See**: [module:@jumpcutking/console~option](module:@jumpcutking/console~option) for a list of options  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| _options | <code>\*</code> | The options to set for the console. |
-
-<a name="module_@jumpcutking/console..on"></a>
-
-### @jumpcutking/console~on(type, callback)
-Adds a callback to the specified callback type.
-
-**Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-**Throws**:
-
-- <code>Error</code> If the callback type is not supported.
-
-**See**
-
-- [callbacks](#module_@jumpcutking/console..callbacks) for a list of supported callback types.
-- [MostCallbackExample](#module_@jumpcutking/console..MostCallbackExample) for an example for what most of the callbacks will need to look like.
-- [EntryCallbackExample](#module_@jumpcutking/console..EntryCallbackExample) for an example for what the entry callback will need to look like.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| type | <code>string</code> | The string of the supported callback type. |
-| callback | <code>function</code> | The callback function to add. |
-
 <a name="module_@jumpcutking/console..call"></a>
 
 ### @jumpcutking/console~call(callbackType, type, args, stack)
@@ -257,7 +302,6 @@ This function calls the specified callbacks in order of their addition.
 - [parseStackTrace](#module_@jumpcutking/console..parseStackTrace) for the stacktrace object format.
 - [callbacks](#module_@jumpcutking/console..callbacks) for a list of supported callback types.
 - [MostCallbackExample](#module_@jumpcutking/console..MostCallbackExample) for an example for what most of the callbacks will need to look like.
-- [EntryCallbackExample](#module_@jumpcutking/console..EntryCallbackExample) for an example for what the entry callback will need to look like.
 
 
 | Param | Type | Default | Description |
@@ -287,45 +331,6 @@ Clones objects for each callback, so they can't modify the original.
 | type | <code>\*</code> | The type of log event that occured. |
 | args | <code>\*</code> | The arguments provided to the console object. |
 | logger | <code>\*</code> | The function to call to log the message. |
-
-<a name="module_@jumpcutking/console..GenerateStacktrace"></a>
-
-### @jumpcutking/console~GenerateStacktrace(stacktrace, _levelToRemove) ⇒ <code>Object</code>
-Conforms a logs's stacktrace to a standard format.
-
-**Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-**Returns**: <code>Object</code> - The stacktrace object.  
-**See**: [parseStackTrace](#module_@jumpcutking/console..parseStackTrace) for the stacktrace object format.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| stacktrace | <code>\*</code> | The error.stack string. |
-| _levelToRemove | <code>\*</code> | The number of lines (or calls) to remove from the stacktrace. It will automatically remove the "Error" line, and it's own call. levlToRemove is appended to "2", removing the first 2 lines. |
-
-<a name="module_@jumpcutking/console..parseStackTrace"></a>
-
-### @jumpcutking/console~parseStackTrace(stackTrace, removeLvl) ⇒ <code>Array</code>
-Parses a stacktrace into a standard format.
-Any unknown format will be added to the stacktrace as a string. 
-This is helpful for Error: top line messages.
-
-**Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-**Returns**: <code>Array</code> - An array of stack objects.  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| stackTrace | <code>\*</code> |  | The error.stack string. |
-| removeLvl | <code>\*</code> | <code>0</code> | The number of lines (or calls) to remove from the stacktrace. |
-
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| stack | <code>Object</code> | The stacktrace object. |
-| stack.call | <code>string</code> | The function or object called. |
-| stack.file | <code>string</code> | The file the message originated from. |
-| stack.line | <code>number</code> | The line the message originated from. |
-| stack.column | <code>number</code> | The column the message originated from. |
 
 <a name="module_@jumpcutking/console..sharePrettyLog"></a>
 
