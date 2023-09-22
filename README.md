@@ -1,7 +1,7 @@
 # console
-@jumpcutking/console is a pretty console reporting system created to support event listening and consistent reporting. It modifies the node.js global console to offer a consistent and stunning experience, as well as unlimited object depth.
+@jumpcutking/console is a pretty console reporting system created to support event listening and consistent reporting. It modifies the node.js global console to offer a consistent and stunning experience and unlimited object depth.
 
-This module works in node.js but hasn't been tested for use in the web browser. For full documentation, please visit [the docs](https://github.com/jumpcutking/console/blob/main/docs/index.js.md).
+This module works in node.js but needs to be tested for use in the web browser. For complete documentation, please visit [the docs](https://github.com/jumpcutking/console/blob/main/docs/index.js.md).
 
 This was created from a console module I used in [@jumpcutking/threads](https://github.com/jumpcutking/threads#threads).
 
@@ -30,12 +30,12 @@ jckConsole.startup({ ...options });
 | storeLogs | <code>boolean</code> | should I store logs in memory |
 | depth | <code>boolean</code> | The depth to inspect objects. 0 is unlimited. |
 
-## Adding a callback
-@jumpcutking/console supports 2 types of callbacks: one for anytime the console is called and another for when a specific supported console function is called.
+## Adding a callback or Listening to an Event
+@jumpcutking/console supports (2) callbacks: one for when the console is called and another for when a specific supported console function is called.
 
-You can add a callback using the module object or the global console object.
+You can add a callback using the module or global console objects.
 
-Adding an entry callback will allow you to listen to all console calls, regardless of type. This is useful for logging to a file or database.
+Adding an entry callback will allow you to listen to all console calls, regardless of type. This is useful for saving the entries into a file or database.
 
 ```javascript
 jckConsole.on('entry', function (type, nessage, args, stack) {
@@ -71,7 +71,7 @@ Currently supported methods:
 | debug | <code>function</code> | The debug function. |
 
 ## Logging Entries
-@jumpcutking/console can store logs in memory for later use. This is useful if you want to store them later. They are each stamped with a datetime and if you have generate stacktrace enabled, they will also include a stacktrace object.
+@jumpcutking/console can store logs in memory for later use. This is useful if you want to use them later. They are each stamped with a DateTime, and if you have generateStacktrace enabled, they will also include a stacktrace object.
 
 ```javascript
 jckConsole.getEntries();
@@ -82,7 +82,7 @@ jckConsole.clearEntries();
 console.clearEntries();
 ```
 
-**Log Entrey object**
+**Log Entry object**
 getEntries() will return an array of log entry objects.
 
 | Name | Type | Description |
@@ -96,7 +96,7 @@ getEntries() will return an array of log entry objects.
 
 **Stacktrace Object**
 
-For ease of use, the stacktrace is resturned as an object not as a string.
+The stacktrace is an object, not a string, for ease of use.
 
 | Name | Type | Description |
 | --- | --- | --- |
@@ -104,3 +104,15 @@ For ease of use, the stacktrace is resturned as an object not as a string.
 | stack.file | <code>string</code> | The file the message originated from. |
 | stack.line | <code>number</code> | The line the message originated from. |
 | stack.column | <code>number</code> | The column the message originated from. |
+
+## Building Docs
+To build the docs, run the following command:
+```bash
+npm run docs
+```
+
+Note: you'll have to install the jsdoc-to-markdown module to build the docs.
+
+```bash
+npm install jsdoc-to-markdown
+```
