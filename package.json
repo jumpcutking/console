@@ -33,7 +33,8 @@
     "url": "https://github.com/jumpcutking/console/issues"
   },
   "homepage": "https://github.com/jumpcutking/console#readme",
-  "devDependencies": {
-    "jsdoc-to-markdown": "^8.0.0"
-  }
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {}
 }
