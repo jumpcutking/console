@@ -29,7 +29,7 @@ jckConsole.startup({
     // depth: 4
 });
 
-jckConsole.on('entry', function (type, nessage, args, stack) {
+jckConsole.on('entry', function (type, message, args, stack) {
     // your code here
 });
 
@@ -94,7 +94,7 @@ The console object for the child thread to use.
 | Name | Type | Description |
 | --- | --- | --- |
 | reportToConsole | <code>boolean</code> | Automatically report to the terminal and console. |
-| generateStacktrace | <code>boolean</code> | Automatically generate a stacktrace object for each log message, will return them to the callback function only. |
+| generateStacktrace | <code>boolean</code> | Automatically generate a stacktrace object for each log message, returning them to the callback function only. |
 | storeLogs | <code>boolean</code> | should I store logs in memory |
 | depth | <code>boolean</code> | The depth to inspect objects. 0 is unlimited. |
 

@@ -27,7 +27,7 @@
  *     // depth: 4
  * });
  * 
- * jckConsole.on('entry', function (type, nessage, args, stack) {
+ * jckConsole.on('entry', function (type, message, args, stack) {
  *     // your code here
  * });
  * 
@@ -106,7 +106,7 @@ var MostCallbackExample = function (message, args, stack) {
  * @see {@link module:@jumpcutking/console~parseStackTrace} for the stacktrace object format.
  * @callback EntryCallbackExample
  */
-var EntryCallbackExample = function (type, nessage, args, stack) {
+var EntryCallbackExample = function (type, message, args, stack) {
 };
 
 /**
@@ -133,7 +133,7 @@ var callbacks = {
  * @type {Object} The console object.
  * @property {boolean} reportToConsole Automatically report to the terminal and console. 
  * @default true
- * @property {boolean} generateStacktrace Automatically generate a stacktrace object for each log message, will return them to the callback function only.
+ * @property {boolean} generateStacktrace Automatically generate a stacktrace object for each log message, returning them to the callback function only.
  * @default false
  * @property {boolean} storeLogs should I store logs in memory
  * @default false
@@ -493,20 +493,34 @@ function sharePrettyLog(msg, logHandler) {
 
         //Util.inspect produces a string not an object, so we append it at such.
 
-        //check to see if objects is now an empty array
-        if (msg.objects.length == 0) {
-            logHandler(`${firstObj}`);
-        } else {
-            //insert a tab
-            // var tab = "\t";
+        //if msg.objects is not an array
 
-            if (options.depth == 0) {
-                logHandler(`${firstObj} `
-                + colorOf.white(util.inspect(msg.objects, {showHidden: false, depth: null, colors: true})));
+        //use this to debug the fucntion and prevent maxium call stack errors (recursion)
+        // myConsole.log("objects are", msg.objects);
+
+        //check to see if objects is now an empty array
+        if (Array.isArray(msg.objects)) {
+            if (msg.objects.length == 0) {
+                logHandler(`${firstObj}`);
             } else {
-                logHandler(`${firstObj} `
-                + colorOf.white(util.inspect(msg.objects, {showHidden: false, depth: options.depth, colors: true})));
+                //insert a tab
+                // var tab = "\t";
+
+                if (options.depth == 0) {
+                    logHandler(`${firstObj} `
+                    + colorOf.white(util.inspect(msg.objects, {showHidden: false, depth: null, colors: true})));
+                } else {
+                    logHandler(`${firstObj} `
+                    + colorOf.white(util.inspect(msg.objects, {showHidden: false, depth: options.depth, colors: true})));
+                }
             }
+        } else if (msg.objects == undefined) {
+            
+            logHandler(`${firstObj} ` + colorOf.white(`undefined`));
+
+        } else {
+            logHandler(`${firstObj} `
+            + colorOf.white(util.inspect(msg.objects, {showHidden: false, depth: null, colors: true})));
         }
 
     } else {

@@ -1,9 +1,27 @@
 # console
-@jumpcutking/console is a pretty console reporting system created to support event listening and consistent reporting. It modifies the node.js global console to offer a consistent and stunning experience and unlimited object depth.
+@jumpcutking/console is a pretty console reporting system created to support event listening and consistent reporting. It modifies the node.js global console to offer a consistent, stunning experience and unlimited object depth.
 
-This module works in node.js but needs to be tested for use in the web browser. For complete documentation, please visit [the docs](https://github.com/jumpcutking/console/blob/main/docs/index.js.md).
+This module works on server node.js but may not be in the web browser. Future updates may provide a web version. For complete documentation, please visit [the docs](https://github.com/jumpcutking/console/blob/main/docs/index.js.md).
 
-This was created from a console module I used in [@jumpcutking/threads](https://github.com/jumpcutking/threads#threads).
+This open-source project was created from a console module I used in [@jumpcutking/threads](https://github.com/jumpcutking/threads#threads) and as part of [The Universe](https://egtuniverse.com) platform.
+
+## What's New
+
+### v1.0 - First Release
+
+This release includes fixes for objects passed into the console. To debug your console event handlers, create a private console attachment and use it to debug your code; otherwise, you will receive a maximum call stack error (caused by recursion).
+
+```javascript
+/**
+ * A fresh instance of the console object.
+ * This keeps a reference to the console without
+ * any loopbacks during global replacement.
+ * @type {Object} The console object.
+ * @see {@link https://nodejs.org/api/console.html} for more information.
+ */
+var myConsole = Console({ stdout: process.stdout, stderr: process.stderr }); 
+``````
+
 
 ## Installation
 Using NPM, install the module with the following command:
@@ -19,14 +37,14 @@ var jckConsole = require('@jumpcutking/console');
 jckConsole.startup({ ...options });
 ```
 
-@jumpcutking/console will not override the console global object until you have called the startup() function using the options below. @jumpcutking/console will throw an error if it's called more than once.
+@jumpcutking/console will not override the console global object until you have called the startup() function using the options below. @jumpcutking/console will throw an error if the startup() function is called more than once.
 
 **options**
 
 | Name | Type | Description |
 | --- | --- | --- |
 | reportToConsole | <code>boolean</code> | Automatically report to the terminal and console. |
-| generateStacktrace | <code>boolean</code> | Automatically generate a stacktrace object for each log message, will return them to the callback function only. |
+| generateStacktrace | <code>boolean</code> | Automatically generate a stacktrace object for each log message, returning them to the callback function only. |
 | storeLogs | <code>boolean</code> | should I store logs in memory |
 | depth | <code>boolean</code> | The depth to inspect objects. 0 is unlimited. |
 
@@ -38,13 +56,13 @@ You can add a callback using the module or global console objects.
 Adding an entry callback will allow you to listen to all console calls, regardless of type. This is useful for saving the entries into a file or database.
 
 ```javascript
-jckConsole.on('entry', function (type, nessage, args, stack) {
+jckConsole.on('entry', function (type, message, args, stack) {
     // Your code here...
 });
 
 // or
 
-console.on('entry', function (type, nessage, args, stack) {
+console.on('entry', function (type, message, args, stack) {
     // Your code here...
 });
 ```
@@ -96,7 +114,7 @@ getEntries() will return an array of log entry objects.
 
 **Stacktrace Object**
 
-The stacktrace is an object, not a string, for ease of use.
+The stack trace is an object, not a string, for ease of use.
 
 | Name | Type | Description |
 | --- | --- | --- |
