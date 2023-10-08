@@ -20,7 +20,7 @@ This release includes fixes for objects passed into the console. To debug your c
  * @see {@link https://nodejs.org/api/console.html} for more information.
  */
 var myConsole = Console({ stdout: process.stdout, stderr: process.stderr }); 
-``````
+```
 
 
 ## Installation
