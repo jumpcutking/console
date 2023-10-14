@@ -7,6 +7,10 @@ This open-source project was created from a console module I used in [@jumpcutki
 
 ## What's New
 
+### v1.1.0 
+
+Minor bug fixes, including a fix for the stacktrace object.
+
 ### v1.0 - First Release
 
 This release includes fixes for objects passed into the console. To debug your console event handlers, create a private console attachment and use it to debug your code; otherwise, you will receive a maximum call stack error (caused by recursion).

@@ -29,7 +29,7 @@ jckConsole.startup({
     // depth: 4
 });
 
-jckConsole.on('entry', function (type, message, args, stack) {
+jckConsole.on('entry', function (type, nessage, args, stack) {
     // your code here
 });
 
@@ -94,7 +94,7 @@ The console object for the child thread to use.
 | Name | Type | Description |
 | --- | --- | --- |
 | reportToConsole | <code>boolean</code> | Automatically report to the terminal and console. |
-| generateStacktrace | <code>boolean</code> | Automatically generate a stacktrace object for each log message, returning them to the callback function only. |
+| generateStacktrace | <code>boolean</code> | Automatically generate a stacktrace object for each log message, will return them to the callback function only. |
 | storeLogs | <code>boolean</code> | should I store logs in memory |
 | depth | <code>boolean</code> | The depth to inspect objects. 0 is unlimited. |
 
@@ -206,6 +206,7 @@ Creates a new stacktrace and conforms it to a stacktrace object [parseStackTrace
 Parses a stacktrace into a standard format.
 Any unknown format will be added to the stacktrace as a string. 
 This is helpful for Error: top line messages.
+If an object is passed in, it will asume the stacktrace is already parsed and return it.
 
 **Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
 **Returns**: <code>Array</code> - An array of stack objects.  
