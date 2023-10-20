@@ -41,6 +41,7 @@ console.info("Hello World!");
 ```
 
 * [@jumpcutking/console](#module_@jumpcutking/console)
+    * [~procDir](#module_@jumpcutking/console..procDir)
     * [~callbacks](#module_@jumpcutking/console..callbacks) : <code>Object</code>
     * [~options](#module_@jumpcutking/console..options) : <code>Object</code>
     * [~entries](#module_@jumpcutking/console..entries) : <code>Array</code>
@@ -59,12 +60,18 @@ console.info("Hello World!");
     * [~getEntries()](#module_@jumpcutking/console..getEntries)
     * [~clearEntries()](#module_@jumpcutking/console..clearEntries)
     * [~options()](#module_@jumpcutking/console..options)
-    * [~call(callbackType, type, args, stack)](#module_@jumpcutking/console..call)
+    * [~call(callbackType, type, args, stack, from)](#module_@jumpcutking/console..call)
     * [~pLog(type, args, logger)](#module_@jumpcutking/console..pLog)
     * [~sharePrettyLog(msg, logHandler)](#module_@jumpcutking/console..sharePrettyLog)
     * [~MostCallbackExample](#module_@jumpcutking/console..MostCallbackExample) : <code>function</code>
     * [~EntryCallbackExample](#module_@jumpcutking/console..EntryCallbackExample) : <code>function</code>
 
+<a name="module_@jumpcutking/console..procDir"></a>
+
+### @jumpcutking/console~procDir
+The current working directory of the process.
+
+**Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
 <a name="module_@jumpcutking/console..callbacks"></a>
 
 ### @jumpcutking/console~callbacks : <code>Object</code>
@@ -88,7 +95,7 @@ The callback functions for each type of console message.
 The console object for the child thread to use.
 
 **Kind**: inner property of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
-**Default**: <code>0</code>  
+**Default**: <code>false</code>  
 **Properties**
 
 | Name | Type | Description |
@@ -97,6 +104,7 @@ The console object for the child thread to use.
 | generateStacktrace | <code>boolean</code> | Automatically generate a stacktrace object for each log message, will return them to the callback function only. |
 | storeLogs | <code>boolean</code> | should I store logs in memory |
 | depth | <code>boolean</code> | The depth to inspect objects. 0 is unlimited. |
+| showFrom | <code>boolean</code> | Show where the console message originated from to the console. |
 
 <a name="module_@jumpcutking/console..entries"></a>
 
@@ -118,6 +126,7 @@ The log entries, if options.storeLogs is true.
 | entries[].args | <code>\*</code> | The additional arguments provided to the console object. |
 | entries[].stack | <code>Array.&lt;object&gt;</code> | The stacktrace object. |
 | entries[].when | <code>Datetime</code> | The time the entry was created. |
+| entries[].from | <code>object</code> | A stacktrace array item for only the orginal caller. |
 
 <a name="module_@jumpcutking/console..Console"></a>
 
@@ -294,7 +303,7 @@ Currently supported methods:
 **Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
 <a name="module_@jumpcutking/console..call"></a>
 
-### @jumpcutking/console~call(callbackType, type, args, stack)
+### @jumpcutking/console~call(callbackType, type, args, stack, from)
 This function calls the specified callbacks in order of their addition.
 
 **Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
@@ -311,6 +320,7 @@ This function calls the specified callbacks in order of their addition.
 | type | <code>\*</code> |  | The type of console message. |
 | args | <code>\*</code> |  | The arguments provided to the console object. |
 | stack | <code>\*</code> | <code></code> | The stacktrace object. |
+| from | <code>\*</code> | <code></code> | A stacktrace object for only the orginal caller. |
 
 <a name="module_@jumpcutking/console..pLog"></a>
 
@@ -381,5 +391,6 @@ An example callback for only the entry events.
 | message | <code>\*</code> | The message provided to the console object. |
 | args | <code>\*</code> | The additional arguments provided to the console object. |
 | stack | <code>\*</code> | The stacktrace object. |
+| from | <code>\*</code> | A stacktrace object for only the orginal caller. |
 
 

@@ -7,6 +7,13 @@ This open-source project was created from a console module I used in [@jumpcutki
 
 ## What's New
 
+### v1.2.0
+jckConsole is happy to help developers know where a log entry has occurred. It's a new object, and It identifies the caller, the file, the line, and the column of the call.
+
+This update is a breaking change to entry and log callbacks. A new "from" object will be passed to every one of the log callbacks. It will look very similar to a parsedStackTrace() line item.
+
+This update also includes other bug fixes.
+
 ### v1.1.0 
 
 Minor bug fixes, including a fix for the stacktrace object.
@@ -60,24 +67,24 @@ You can add a callback using the module or global console objects.
 Adding an entry callback will allow you to listen to all console calls, regardless of type. This is useful for saving the entries into a file or database.
 
 ```javascript
-jckConsole.on('entry', function (type, message, args, stack) {
+jckConsole.on('entry', function (type, message, args, stack, from) {
     // Your code here...
 });
 
 // or
 
-console.on('entry', function (type, message, args, stack) {
+console.on('entry', function (type, message, args, stack, from) {
     // Your code here...
 });
 ```
 
 ```javascript
-jckConsole.on("warn", function (message, args, stack) {
+jckConsole.on("warn", function (message, args, stack, from) {
 });
 
 // or
 
-console.on("warn", function (message, args, stack) {
+console.on("warn", function (message, args, stack, from) {
 });
 ```
 
@@ -114,6 +121,7 @@ getEntries() will return an array of log entry objects.
 | entry.args | <code>\*</code> | The additional arguments provided to the console object. |
 | entry.stack | <code>Array.&lt;object&gt;</code> | An array of a stacktrace object. |
 | entry.when | <code>Datetime</code> | The time the entry was created. |
+| entry.from | <code>object</code> | A stacktrace object for only the orginal caller. |
 
 
 **Stacktrace Object**

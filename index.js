@@ -38,6 +38,12 @@
  * console.info("Hello World!");
  */
 
+
+/**
+ * The current working directory of the process.
+ */
+var procDir = process.cwd();
+
 /**
  * Start's the console and sets up the event listener.
  * @param {*} _options The options to set for the console. 
@@ -89,6 +95,7 @@ function on(type, callback) {
  * @param {*} message The message provided to the console object.
  * @param {*} args The additional arguments provided to the console object.
  * @param {*} stack The stacktrace object.
+ * @param {*} from A stacktrace object for only the orginal caller.
  * @see {@link module:@jumpcutking/console~parseStackTrace} for the stacktrace object format.
  * @see {@link module:@jumpcutking/console~callbacks} for a list of supported callback types.
  * @callback MostCallbackExample
@@ -103,10 +110,11 @@ var MostCallbackExample = function (message, args, stack) {
  * @param {*} message The message provided to the console object.
  * @param {*} args The additional arguments provided to the console object.
  * @param {*} stack The stacktrace object.
+ * @param {*} from A stacktrace object for only the orginal caller.
  * @see {@link module:@jumpcutking/console~parseStackTrace} for the stacktrace object format.
  * @callback EntryCallbackExample
  */
-var EntryCallbackExample = function (type, nessage, args, stack) {
+var EntryCallbackExample = function (type, nessage, args, stack, from) {
 };
 
 /**
@@ -139,12 +147,15 @@ var callbacks = {
  * @default false
  * @property {boolean} depth The depth to inspect objects. 0 is unlimited.
  * @default 0
+ * @property {boolean} showFrom Show where the console message originated from to the console.
+ * @default false
  */
 var options = {
     reportToConsole: true,
     generateStacktrace: false,
     storeLogs: false,
-    depth: 0
+    depth: 0,
+    showFrom: false
 }
 
 /**
@@ -253,6 +264,7 @@ function parseStackTrace(stackTrace, removeLvl = 0) {
  * @property {*} entries[].args The additional arguments provided to the console object.
  * @property {object[]} entries[].stack The stacktrace object.
  * @property {Datetime} entries[].when The time the entry was created.
+ * @property {object} entries[].from A stacktrace array item for only the orginal caller.
  * @see {@link module:@jumpcutking/console~parseStackTrace} for the stacktrace object format.
  */
 var entries = [];
@@ -350,11 +362,12 @@ var zconsole = () => {
  * @param {*} type The type of console message.
  * @param {*} args The arguments provided to the console object.
  * @param {*} stack The stacktrace object.
+ * @param {*} from A stacktrace object for only the orginal caller.
  * @see {@link module:@jumpcutking/console~parseStackTrace} for the stacktrace object format.
  * @see {@link module:@jumpcutking/console~callbacks} for a list of supported callback types.
  * @see {@link module:@jumpcutking/console~MostCallbackExample} for an example for what most of the callbacks will need to look like.
  */
-function call(callbackType, type, args, stack = null) {
+function call(callbackType, type, args, stack = null, from = null) {
     
     // myConsole.info("Calling Callbacks", callbackType, type, args, stack);
 
@@ -371,11 +384,11 @@ function call(callbackType, type, args, stack = null) {
 
         if (callbackType == "entry") {
             for (var callback of callbacks[callbackType]) {
-                callback(type, message, args, stack)
+                callback(type, message, args, stack, from)
             }
         } else {
             for (var callback of callbacks[callbackType]) {
-                callback(message, args, stack)
+                callback(message, args, stack, from)
             }
         }
 
@@ -398,11 +411,15 @@ function call(callbackType, type, args, stack = null) {
  */
 function pLog(type, args, logger) {
     
-    var stack = null;
+    var stack, from = null;
 
     if (options.generateStacktrace) {
         stack = GenerateStacktrace(2)
+        trace = stack[0];
+    } else {
+        from = GenerateStacktrace(2)[0];
     }
+    // var trace = GenerateStacktrace(2)[0];
 
     //store the entry
     if (options.storeLogs) {
@@ -412,7 +429,8 @@ function pLog(type, args, logger) {
                 type: type,
                 message: args[0],
                 args: args,
-                when: new Date()
+                when: new Date(),
+                from: from
             });
         } else {
             entries.push({
@@ -420,24 +438,27 @@ function pLog(type, args, logger) {
                 message: args[0],
                 args: args,
                 stack: stack,
-                when: new Date()
+                when: new Date(),
+                from: from
             });
         }
     }
 
     if (!stack) {
-        call("entry", type + "", [...args]);
-        call(type + "", type + "", [...args]);
+        call("entry", type + "", [...args], null, from);
+        call(type + "", type + "", [...args], null, from);
     } else {
-        call("entry", type + "", [...args], [...stack]);
-        call(type + "", type + "", [...args], [...stack]);
+        call("entry", type + "", [...args], [...stack], from);
+        call(type + "", type + "", [...args], [...stack], from);
     }
 
     // myConsole.log("Example Stack Trace: ", stacktrace)
     if (options.reportToConsole) {
         sharePrettyLog({
             message: type,
-            objects: args
+            objects: args,
+            from: from,
+            stack: stack
         }, logger);
     }
 
@@ -453,6 +474,15 @@ function pLog(type, args, logger) {
 function sharePrettyLog(msg, logHandler) {
 
     // console.log(msg);
+    // "file": "/Users/thanos/Documents/devl/universe-home/uam/functions.js",
+    // "line": 36,
+    // "column": 9
+
+    var intro = "";
+
+    if (options.showFrom) {
+        intro = `${msg.from.file.replace(procDir,"")}:${msg.from.line}:${msg.from.column}`;
+    }
 
     var logHandler = logHandler;
     var color = false;
@@ -501,23 +531,23 @@ function sharePrettyLog(msg, logHandler) {
 
         //check to see if objects is now an empty array
         if (msg.objects.length == 0) {
-            logHandler(`${firstObj}`);
+            logHandler(`${colorOf.dim(intro)} ${firstObj}`);
         } else {
             //insert a tab
             // var tab = "\t";
 
             if (options.depth == 0) {
-                logHandler(`${firstObj} `
+                logHandler(`${colorOf.dim(intro)} ${firstObj} `
                 + colorOf.white(util.inspect(msg.objects, {showHidden: false, depth: null, colors: true})));
             } else {
-                logHandler(`${firstObj} `
+                logHandler(`${colorOf.dim(intro)} ${firstObj} `
                 + colorOf.white(util.inspect(msg.objects, {showHidden: false, depth: options.depth, colors: true})));
             }
         }
 
     } else {
         logHandler(
-        util.inspect(msg.objects, {showHidden: false, depth: null, colors: true}));
+        util.inspect(`${colorOf.dim(intro)}`, msg.objects, {showHidden: false, depth: null, colors: true}));
     }
 
 } //module.exports.sharePrettyLog = sharePrettyLog;

@@ -1,6 +1,6 @@
 {
   "name": "@jumpcutking/console",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "@jumpcutking/console is a pretty console reporting system created to support event listening and consistent reporting. It modifies the node.js global console to offer a consistent and stunning experience and unlimited object depth.",
   "main": "index.js",
   "scripts": {
