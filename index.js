@@ -38,6 +38,8 @@
  * console.info("Hello World!");
  */
 
+// const { generateSafeError } = require("@jumpcutking/threads/src/threads");
+
 
 /**
  * The current working directory of the process.
@@ -444,19 +446,35 @@ function pLog(type, args, logger) {
         }
     }
 
+    //for each argument check if it is a error object
+    // if it is, then we need to parse it and add it to the stacktrace
+    
+    // var types = [];
+    var nArgs = []
+    for (var arg of args) {
+        if (arg instanceof Error) {
+            nArgs.push(generateSafeError(arg));
+        } else {
+            nArgs.push(arg);
+        }
+    }
+
+    // args.push = types;
+
+
     if (!stack) {
-        call("entry", type + "", [...args], null, from);
-        call(type + "", type + "", [...args], null, from);
+        call("entry", type + "", [...nArgs], null, from);
+        call(type + "", type + "", [...nArgs], null, from);
     } else {
-        call("entry", type + "", [...args], [...stack], from);
-        call(type + "", type + "", [...args], [...stack], from);
+        call("entry", type + "", [...nArgs], [...stack], from);
+        call(type + "", type + "", [...nArgs], [...stack], from);
     }
 
     // myConsole.log("Example Stack Trace: ", stacktrace)
     if (options.reportToConsole) {
         sharePrettyLog({
             message: type,
-            objects: args,
+            objects: nArgs,
             from: from,
             stack: stack
         }, logger);
@@ -465,6 +483,30 @@ function pLog(type, args, logger) {
 
 
 } //module.exports.pLog = pLog;
+
+
+/**
+ * Generates a safe and passable error message
+ * @param {*} err The error to generate a safe error message for.
+ */
+function generateSafeError(err) {
+
+    //if err is undefined, return undefined
+    if (typeof err == "undefined") {
+        console.error("Threads is unable to generate a safe error. Error is undefined.");
+    }
+
+    if (typeof err == "string") {
+        return err;
+    }
+
+    var stack = parseStackTrace(err.stack, 0);
+    var safeError = JSON.parse(JSON.stringify(err, Object.getOwnPropertyNames(err)));
+    safeError.stack = stack;
+    return safeError;
+
+} module.exports.generateSafeError = generateSafeError;
+
 
 /**
  * Shares a Pretty Log message in the terminal
