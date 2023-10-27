@@ -235,6 +235,7 @@ function parseStackTrace(stackTrace, removeLvl = 0) {
             file: file,
             line: parseInt(lineNum, 10),
             column: parseInt(columnNum, 10),
+            s: line.trim(),
           }
 
           if (columnNum == undefined) {

@@ -7,6 +7,9 @@ This open-source project was created from a console module I used in [@jumpcutki
 
 ## What's New
 
+### v1.5.0
+jckConsole now provides generateSafeError and will automatically generate a safe communicatable error object. While JCKConsole doesn't override your error objects, it will convert error objects passed into it. I added a string variable to match the original stack trace item for easier debugging. Clicking on the line and column in VSCode's console will go to that line and column, making it easy to debug and develop.
+
 ### v1.2.0
 jckConsole is happy to help developers know where a log entry has occurred. It's a new object, and It identifies the caller, the file, the line, and the column of the call.
 
