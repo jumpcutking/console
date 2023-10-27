@@ -62,6 +62,7 @@ console.info("Hello World!");
     * [~options()](#module_@jumpcutking/console..options)
     * [~call(callbackType, type, args, stack, from)](#module_@jumpcutking/console..call)
     * [~pLog(type, args, logger)](#module_@jumpcutking/console..pLog)
+    * [~generateSafeError(err)](#module_@jumpcutking/console..generateSafeError)
     * [~sharePrettyLog(msg, logHandler)](#module_@jumpcutking/console..sharePrettyLog)
     * [~MostCallbackExample](#module_@jumpcutking/console..MostCallbackExample) : <code>function</code>
     * [~EntryCallbackExample](#module_@jumpcutking/console..EntryCallbackExample) : <code>function</code>
@@ -343,6 +344,17 @@ Clones objects for each callback, so they can't modify the original.
 | args | <code>\*</code> | The arguments provided to the console object. |
 | logger | <code>\*</code> | The function to call to log the message. |
 
+<a name="module_@jumpcutking/console..generateSafeError"></a>
+
+### @jumpcutking/console~generateSafeError(err)
+Generates a safe and passable error message
+
+**Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| err | <code>\*</code> | The error to generate a safe error message for. |
+
 <a name="module_@jumpcutking/console..sharePrettyLog"></a>
 
 ### @jumpcutking/console~sharePrettyLog(msg, logHandler)
@@ -372,6 +384,7 @@ An example callback for all events except the entry event.
 | message | <code>\*</code> | The message provided to the console object. |
 | args | <code>\*</code> | The additional arguments provided to the console object. |
 | stack | <code>\*</code> | The stacktrace object. |
+| from | <code>\*</code> | A stacktrace object for only the orginal caller. |
 
 <a name="module_@jumpcutking/console..EntryCallbackExample"></a>
 
