@@ -455,6 +455,9 @@ function pLog(type, args, logger) {
     for (var arg of args) {
         if (arg instanceof Error) {
             nArgs.push(generateSafeError(arg));
+            if ("data" in arg) {
+                nArgs.push(arg.data);
+            }
         } else {
             nArgs.push(arg);
         }
@@ -594,6 +597,41 @@ function sharePrettyLog(msg, logHandler) {
     }
 
 } //module.exports.sharePrettyLog = sharePrettyLog;
+
+
+/**
+ * Provides a top look of an object. 
+ * Turns promises, functions, arrays, and objects into a string of [type].
+ * @param {*} obj The object to truncate.
+ * @returns {Object} The truncated object.
+ */
+function TruncateTopLevel(obj) {
+    //clone obj
+    var result = {};
+
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+           
+            //some arrays will appear as objects so test objects last
+            if (obj instanceof Promise) {
+                result[key] = '[promise]';
+            } else if (typeof obj[key] === 'function') {
+                result[key] = '[function]';
+            } else if (Array.isArray(obj[key])) {
+                result[key] = '[array]';
+            //catch other types like promises and functions
+            } else if (typeof obj[key] === 'symbol') {
+                result[key] = '[symbol]';
+            } else if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+                result[key] = '[object]';
+            } else {
+                result[key] = obj[key];
+            }
+        }
+    }
+
+    return result;
+} module.exports.TruncateTopLevel = TruncateTopLevel;
 
 /**
  * The console contrustor, for creating and working with the console.
