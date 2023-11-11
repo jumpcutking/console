@@ -64,6 +64,7 @@ console.info("Hello World!");
     * [~pLog(type, args, logger)](#module_@jumpcutking/console..pLog)
     * [~generateSafeError(err)](#module_@jumpcutking/console..generateSafeError)
     * [~sharePrettyLog(msg, logHandler)](#module_@jumpcutking/console..sharePrettyLog)
+    * [~TruncateTopLevel(obj)](#module_@jumpcutking/console..TruncateTopLevel) ⇒ <code>Object</code>
     * [~MostCallbackExample](#module_@jumpcutking/console..MostCallbackExample) : <code>function</code>
     * [~EntryCallbackExample](#module_@jumpcutking/console..EntryCallbackExample) : <code>function</code>
 
@@ -366,6 +367,19 @@ Shares a Pretty Log message in the terminal
 | --- | --- | --- |
 | msg | <code>\*</code> | The message object containing the console.f(...args) from the child. |
 | logHandler | <code>\*</code> | The function to call to log the message. Do NOT USE console.log! |
+
+<a name="module_@jumpcutking/console..TruncateTopLevel"></a>
+
+### @jumpcutking/console~TruncateTopLevel(obj) ⇒ <code>Object</code>
+Provides a top look of an object. 
+Turns promises, functions, arrays, and objects into a string of [type].
+
+**Kind**: inner method of [<code>@jumpcutking/console</code>](#module_@jumpcutking/console)  
+**Returns**: <code>Object</code> - The truncated object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| obj | <code>\*</code> | The object to truncate. |
 
 <a name="module_@jumpcutking/console..MostCallbackExample"></a>
 
