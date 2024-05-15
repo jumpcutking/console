@@ -565,7 +565,10 @@ function sharePrettyLog(msg, logHandler) {
     }
 
     //remove first object if it's a string
-    if (typeof firstObj === "string") {
+    //if msg.objects is undefined
+    if (typeof msg.objects === "undefined") {
+        logHandler(`${colorOf.dim(intro)}`);
+    } else if (typeof firstObj === "string") {
         msg.objects.shift();
 
         //if I have only one data object (second arg), don't wrap it in an array.
@@ -576,7 +579,9 @@ function sharePrettyLog(msg, logHandler) {
         //Util.inspect produces a string not an object, so we append it at such.
 
         //check to see if objects is now an empty array
-        if (msg.objects.length == 0) {
+        if (typeof msg.objects === "undefined") {
+            logHandler(`${colorOf.dim(intro)} ${firstObj} ${colorOf.white("undefined")}`);
+        } else if (msg.objects.length == 0) {
             logHandler(`${colorOf.dim(intro)} ${firstObj}`);
         } else {
             //insert a tab
